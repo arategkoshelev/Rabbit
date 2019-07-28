@@ -1,4 +1,4 @@
-var fs = require('fs');
+const fs = require('fs');
 
 module.exports = function move(oldPath, newPath, callback) {
 
@@ -15,8 +15,8 @@ module.exports = function move(oldPath, newPath, callback) {
     });
 
   function copy() {
-    var readStream = fs.createReadStream(oldPath);
-    var writeStream = fs.createWriteStream(newPath);
+    const readStream = fs.createReadStream(oldPath);
+    const writeStream = fs.createWriteStream(newPath);
 
     readStream.on('error', callback);
     writeStream.on('error', callback);

@@ -2,8 +2,8 @@ require('dotenv').config();
 const rabbit = require("amqplib").connect(process.env.RABBIT_URL);
 const filecopier = require("../utils/filecopier");
 
-const NEW_FILES_FOLDER = 'newfiles';
-
+const NEW_FILES_FOLDER = 'volNew';
+console.log("filechanger11")
 rabbit.then(function(connection) {
 	var ok = connection.createChannel()
 	ok.then(function(channel) {

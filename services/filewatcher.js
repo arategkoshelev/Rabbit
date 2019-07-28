@@ -4,8 +4,8 @@ const chokidar = require('chokidar');
 const fs = require('fs');
 const path = require('path');
 
-const watcher = chokidar.watch(path.resolve(__dirname,'../files'), {ignored: /^\./, persistent: true});
-
+const watcher = chokidar.watch(path.resolve(__dirname,'../../var/vol'), {ignored: /^\./, persistent: true});
+console.log("filechanger")
 rabbit.then(function(connection) {
 	const ok = connection.createChannel()
 	ok.then(function(channel) {

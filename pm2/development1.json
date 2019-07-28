@@ -1,0 +1,47 @@
+{
+  "apps" : [
+      {
+          "name": "users",
+          "script": "./services/filewatcher.js",
+          "args" : ""
+      },
+      {
+          "name": "server",
+          "exec_mode": "fork_mode",
+          "script": "server.js",
+          "watch": ["services"]
+      },
+      {
+          "name": "filewatcher",
+          "script": "./services/filewatcher.js",
+          "args" : ""
+      },
+      {
+          "name": "filechanger",
+          "script": "./services/filewatcher.js",
+          "args" : ""
+      },
+      {
+        "exec_mode": "fork_mode",
+        "script": "appname.js",
+        "name": "appname-0",
+        "node_args": [ "--harmony" ],
+        "env": {
+          "NODE_ENV": "production"
+        },
+        "error_file": "./logs/appname-0.err.log",
+        "out_file": "./logs/appname-0.out.log"
+      },
+      {
+        "exec_mode": "fork_mode",
+        "script": "appname.js",
+        "name": "appname-1",
+        "node_args": [ "--harmony" ],
+        "env": {
+          "NODE_ENV": "production"
+        },
+        "error_file": "./logs/appname-1.err.log",
+        "out_file": "./logs/appname-1.out.log"
+      }
+  ]
+}

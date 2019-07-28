@@ -1,16 +1,35 @@
-version: '2'
+version: '3'
 
 services:
-  rabbitmq:
-    image: 'bitnami/rabbitmq:3.7'
+  rabbit:
+    build:
+      context: .
+      dockerfile: ./RABBIT/Dockerfile
+    container_name: rabbit
     ports:
-      - '4369:4369'
       - '5672:5672'
       - '15672:15672'
-      - '25672:25672'
+    env_file: .env
 
-    volumes:
-      - 'rabbitmq_data:/bitnami'
-volumes:
-  rabbitmq_data:
-    driver: local
+  node:
+    container_name: node
+    build:
+      context: .
+      dockerfile: ./NODE/Dockerfile
+    env_file: .env
+    depends_on:
+      - rabbit
+    tty: true
+    ports:
+      - '4043:4043'
+    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start 
+    volumes: 
+      - ./files:/var/files
+      - ./newfiles:/var/newfiles
+
+# volumes:
+#   volume1:
+#     driver: local
+# networks:
+#   common:
+#     driver: bridge

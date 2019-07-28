@@ -1,0 +1,22 @@
+{
+    "apps" : [
+        {
+            "name": "users",
+            "script": "services/users.js"
+        },
+        {
+            "name": "server",
+            "script": "server.js"
+        },
+        {
+            "name": "filewatcher",
+            "script": "services/filewatcher.js"
+
+        },
+        {
+            "name": "filechanger",
+            "script": "services/filechanger.js",
+            "watch": ["services"]
+        }
+    ]
+}
