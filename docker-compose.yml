@@ -2,30 +2,104 @@ version: '3'
 
 services:
   rabbit:
+    container_name: rabbit
     build:
       context: .
       dockerfile: ./RABBIT/Dockerfile
     container_name: rabbit
     ports:
       - '5672:5672'
+      - '15671:15671'
       - '15672:15672'
     env_file: .env
 
-  node:
-    container_name: node
+  server:
+    container_name: server
     build:
       context: .
       dockerfile: ./NODE/Dockerfile
     env_file: .env
+    links:
+      - "mongo"
+      - "rabbit"
     depends_on:
-      - rabbit
+      - "mongo"
+      - "rabbit"
     tty: true
     ports:
       - '4043:4043'
-    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start 
+      - '8081:8081'
+    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start-server 
     volumes: 
       - ./files:/var/files
       - ./newfiles:/var/newfiles
+
+  users:
+    container_name: users
+    build:
+      context: .
+      dockerfile: ./NODE/Dockerfile
+    env_file: .env
+    links:
+      - "mongo"
+      - "rabbit"
+    depends_on:
+      - "mongo"
+      - "rabbit"
+    tty: true
+    # ports:
+    #   - '4043:4043'
+    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start-users 
+    volumes: 
+      - ./files:/var/files
+      - ./newfiles:/var/newfiles
+
+  filechanger:
+    container_name: filechanger
+    build:
+      context: .
+      dockerfile: ./NODE/Dockerfile
+    env_file: .env
+    links:
+      - "mongo"
+      - "rabbit"
+    depends_on:
+      - "mongo"
+      - "rabbit"
+    tty: true
+    # ports:
+    #   - '4043:4043'
+    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start-filechanger 
+    volumes: 
+      - ./files:/var/files
+      - ./newfiles:/var/newfiles
+
+  filewatcher:
+    container_name: filewatcher
+    build:
+      context: .
+      dockerfile: ./NODE/Dockerfile
+    env_file: .env
+    links:
+      - "mongo"
+      - "rabbit"
+    depends_on:
+      - "mongo"
+      - "rabbit"
+    tty: true
+    # ports:
+    #   - '4043:4043'
+    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start-filewatcher 
+    volumes: 
+      - ./files:/var/files
+      - ./newfiles:/var/newfiles
+
+  mongo:
+    image: mongo
+    # restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
 
 # volumes:
 #   volume1:

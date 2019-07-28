@@ -4,6 +4,10 @@ const chokidar = require('chokidar');
 const fs = require('fs');
 const path = require('path');
 
+process.on('uncaughtException', function (err) {
+  console.log(err);
+});
+
 const watcher = chokidar.watch(path.resolve(__dirname,'../../var/vol'), {ignored: /^\./, persistent: true});
 console.log("filechanger")
 rabbit.then(function(connection) {
