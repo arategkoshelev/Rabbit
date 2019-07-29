@@ -1,17 +1,28 @@
 version: '3'
 
 services:
-  rabbit:
-    container_name: rabbit
+  rabbitmq:
+    container_name: rabbitmq
     build:
       context: .
       dockerfile: ./RABBIT/Dockerfile
-    container_name: rabbit
     ports:
       - '5672:5672'
       - '15671:15671'
       - '15672:15672'
     env_file: .env
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    # restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
 
   server:
     container_name: server
@@ -19,17 +30,18 @@ services:
       context: .
       dockerfile: ./NODE/Dockerfile
     env_file: .env
-    links:
-      - "mongo"
-      - "rabbit"
+    # links:
+    #   - "mongo"
+    #   - "rabbitmq"
     depends_on:
       - "mongo"
-      - "rabbit"
+      - "rabbitmq"
     tty: true
     ports:
       - '4043:4043'
       - '8081:8081'
-    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start-server 
+      - "3000:3000"
+    command:  /app/wait-for-it/wait-for-it.sh rabbitmq:5672 --timeout=0 --strict -- make start-server 
     volumes: 
       - ./files:/var/files
       - ./newfiles:/var/newfiles
@@ -40,16 +52,16 @@ services:
       context: .
       dockerfile: ./NODE/Dockerfile
     env_file: .env
-    links:
-      - "mongo"
-      - "rabbit"
+    # links:
+    #   - "mongo"
+    #   - "rabbitmq"
     depends_on:
       - "mongo"
-      - "rabbit"
+      - "rabbitmq"
     tty: true
     # ports:
     #   - '4043:4043'
-    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start-users 
+    command:  /app/wait-for-it/wait-for-it.sh rabbitmq:5672 --timeout=0 --strict -- make start-users 
     volumes: 
       - ./files:/var/files
       - ./newfiles:/var/newfiles
@@ -60,16 +72,16 @@ services:
       context: .
       dockerfile: ./NODE/Dockerfile
     env_file: .env
-    links:
-      - "mongo"
-      - "rabbit"
+    # links:
+    #   - "mongo"
+    #   - "rabbitmq"
     depends_on:
       - "mongo"
-      - "rabbit"
+      - "rabbitmq"
     tty: true
     # ports:
     #   - '4043:4043'
-    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start-filechanger 
+    command:  /app/wait-for-it/wait-for-it.sh rabbitmq:5672 --timeout=0 --strict -- make start-filechanger 
     volumes: 
       - ./files:/var/files
       - ./newfiles:/var/newfiles
@@ -80,26 +92,20 @@ services:
       context: .
       dockerfile: ./NODE/Dockerfile
     env_file: .env
-    links:
-      - "mongo"
-      - "rabbit"
+    # links:
+    #   - "mongo"
+    #   - "rabbitmq"
     depends_on:
       - "mongo"
-      - "rabbit"
+      - "rabbitmq"
     tty: true
     # ports:
     #   - '4043:4043'
-    command:  /app/wait-for-it/wait-for-it.sh rabbit:5672 --timeout=0 --strict -- make start-filewatcher 
+    command:  /app/wait-for-it/wait-for-it.sh rabbitmq:5672 --timeout=0 --strict -- make start-filewatcher 
     volumes: 
       - ./files:/var/files
       - ./newfiles:/var/newfiles
 
-  mongo:
-    image: mongo
-    # restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
 
 # volumes:
 #   volume1:

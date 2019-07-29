@@ -18,8 +18,8 @@ const gateway = new Gateway({
 app.use(gateway.middleware());
 
 
-app.get('/balance', (req, res) => {
-  res.json({
+app.get('/balance', async (req, res) => {
+  await res.json({
     amount: 500,
   });
 });

@@ -8,10 +8,14 @@ process.on('uncaughtException', function (err) {
   console.log(err);
 });
 
-const watcher = chokidar.watch(path.resolve(__dirname,'../../var/vol'), {ignored: /^\./, persistent: true});
-console.log("filechanger")
+const watcher = chokidar.watch(path.resolve(__dirname,'../../var/files'), {ignored: /^\./, persistent: true});
+console.log("filewatcher")
+
+
 rabbit.then(function(connection) {
+
 	const ok = connection.createChannel()
+
 	ok.then(function(channel) {
 		channel.assertQueue("messages")
 		channel.assertExchange("incoming")

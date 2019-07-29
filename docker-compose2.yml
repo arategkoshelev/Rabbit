@@ -1,39 +1,39 @@
-version: '3'
+# version: '3'
 
-services:
-  rabbit:
-    # build:
-    #   context: .
-    #   dockerfile: ./RABBIT/Dockerfile
-    image: rabbitmq:3-management
-    # container_name: rabbit_host
-    # ports:
-    #   - '4369:4369'
-    #   - '5672:5672'
-    #   - '15672:15672'
-    #   - '25672:25672'
-    env_file: .env
-    # restart: always
-    # networks:
-    #   - common
-    # volumes:
-    #   - 'rabbitmq_data:/bitnami'
-  node:
-    build:
-      context: .
-      dockerfile: ./NODE/Dockerfile
-    env_file: .env
-    # links:
-    #   - "rabbitmq:rabbitmq"
-    # networks:
-    #   - common
-    depends_on:
-      - rabbit
-    # restart: always
+# services:
+#   rabbit:
+#     # build:
+#     #   context: .
+#     #   dockerfile: ./RABBIT/Dockerfile
+#     image: rabbitmq:3-management
+#     # container_name: rabbit_host
+#     # ports:
+#     #   - '4369:4369'
+#     #   - '5672:5672'
+#     #   - '15672:15672'
+#     #   - '25672:25672'
+#     env_file: .env
+#     # restart: always
+#     # networks:
+#     #   - common
+#     # volumes:
+#     #   - 'rabbitmq_data:/bitnami'
+#   node:
+#     build:
+#       context: .
+#       dockerfile: ./NODE/Dockerfile
+#     env_file: .env
+#     # links:
+#     #   - "rabbitmq:rabbitmq"
+#     # networks:
+#     #   - common
+#     depends_on:
+#       - rabbit
+#     # restart: always
 
-# volumes:
-#   rabbitmq_data:
-#     driver: local
-# networks:
-#   common:
-#     driver: bridge
+# # volumes:
+# #   rabbitmq_data:
+# #     driver: local
+# # networks:
+# #   common:
+# #     driver: bridge
