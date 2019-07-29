@@ -3,13 +3,13 @@ const rabbit = require("amqplib").connect(process.env.RABBIT_URL);
 const filecopier = require("../utils/filecopier");
 
 process.on('uncaughtException', function (err) {
-  console.log(err);
+  console.log('uncaughtException', err);
 });
 
-const NEW_FILES_FOLDER = 'volNew';
+const NEW_FILES_FOLDER = 'newfiles';
 console.log("filechanger")
 rabbit.then(function(connection) {
-	var ok = connection.createChannel()
+	const ok = connection.createChannel()
 	ok.then(function(channel) {
 		// durable: true is set by default
 		channel.assertQueue("messages")
@@ -44,4 +44,4 @@ rabbit.then(function(connection) {
 		})
 	})
 	return ok
-}).then(null, console.log)
+}).then(null, e=>console.log("error in filewatcher",e))

@@ -2,7 +2,11 @@ require('dotenv').config();
 const MicroMQ = require('micromq');
 
 process.on('uncaughtException', function (err) {
-  console.log(err);
+  console.log('++++uncaughtException',err);
+});
+
+process.on('unhandledRejection', function (err) {
+  console.log('++++unhandledRejection',err);
 });
 
 
@@ -53,7 +57,7 @@ const startApp = async () =>{
   }
 }
 
-startApp();
+startApp().then(null, console.log("startApp"));
 
 
 

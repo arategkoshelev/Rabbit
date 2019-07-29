@@ -13,7 +13,10 @@
     "path": "^0.12.7",
     "pm2": "^2.5.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "debug": "^4.1.1",
+    "winston": "^3.2.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "express": "node server.js",
