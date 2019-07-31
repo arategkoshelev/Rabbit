@@ -1,7 +1,7 @@
 FROM node:12
 RUN ls -la
 RUN mkdir /app
-COPY ./ /app
+COPY ./app /app
 WORKDIR /app
 RUN pwd
 RUN ls -la
