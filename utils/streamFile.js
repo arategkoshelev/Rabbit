@@ -10,6 +10,7 @@ function streamFile(filename){
   stream.on('readable', function(){
     const data = stream.read();
     data && console.log(data);
+    console.log('/========================================/');
   })
 
   stream.on('end', function(){

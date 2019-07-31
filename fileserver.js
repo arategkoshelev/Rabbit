@@ -6,7 +6,7 @@ const streamFile = require('./utils/streamFile');
 
 const ROOT = __dirname + '/public';
 
-streamFile(ROOT + '/index.html');
+// streamFile(ROOT + '/index.html');
 
 http.createServer((req, res)=>{
 
@@ -16,7 +16,9 @@ http.createServer((req, res)=>{
     return
   }
 
-  sendFileSafe(url.parse(req.url).pathname, req, res, ROOT)
+
+  sendFileSafe(url.parse(req.url).pathname, res, ROOT)
+
 
 }).listen(3000)
 
