@@ -72,11 +72,13 @@ const server = new http.Server(function(req, res){
   }else if(urlParse.pathname == '/'){
     // const info = fs.readFileSync('./index.html')
     // res.end(info)
-    fs.readFile('./index.html', (err,info)=>{
+
+    fs.readFile('./public/index.html', (err,info)=>{
+      console.log(info)
       if (err) {
-        console.error(err);
+        console.log(err)
         res.statusCode = 500;
-        res.end('ServerError');
+        res.end('ServereeeError');
         return
       }
 

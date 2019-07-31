@@ -16,7 +16,9 @@ http.createServer((req, res)=>{
     return
   }
 
-  sendFileSafe(url.parse(req.url).pathname, res, ROOT)
+
+  sendFileSafe(url.parse(req.url).pathname, req, res, ROOT)
+
 
 }).listen(3000)
 
