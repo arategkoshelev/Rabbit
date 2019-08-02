@@ -5,7 +5,7 @@ const variables = { title: 'Express' }
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('../views/index', variables);
+  res.render('page');
 });
 
 module.exports = router;
