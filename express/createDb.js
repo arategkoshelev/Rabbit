@@ -3,16 +3,12 @@ const User = require('./models/user').User;
 
 //console.log(mongoose.collection.readyState);
 
-mongoose.connection.on('open', ()=>{
+mongoose.connection.on('open', async ()=>{
   const db = mongoose.connection.db;
-  db.dropDatabase((err) =>{
+
+  db.dropDatabase( async (err) =>{
     if (err) throw err;
-
-
-
-
-
-    async.parallel([
+    await Promise.all([
       (callback)=>{
         const vasya = new User({
           username: "Vasya",
@@ -40,10 +36,12 @@ mongoose.connection.on('open', ()=>{
           callback(err,kolya);
         })
       }
-    ],(err,result)=>{
-      console.log(arguments);
-      mongoose.disconnect();
-    })
+    ]).then(
+      response=>console.log(response),
+      err=>console.log(err)
+
+
+    )
   })
 })
 
