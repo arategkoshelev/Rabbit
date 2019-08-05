@@ -7,6 +7,8 @@ const sassMiddleware = require('node-sass-middleware');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const favicon = require('express-favicon');
+const session = require('express-session')
 
 const config = require('./config');
 const routes = require('./routes');
@@ -24,9 +26,17 @@ if(app.get('env') == 'development'){
   app.use(logger('default'));
 }
 
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser()); //req.cookies
+app.use(session({
+  secret: config.get('session:secret'),
+  key: config.get('session:key'),
+  cookie: config.get('session:cookie'),
+  resave: true,
+  saveUninitialized: true
+}))
 
 app.use(require('./middleware/sendHttpError'));
 
