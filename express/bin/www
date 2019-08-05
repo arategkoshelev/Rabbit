@@ -4,9 +4,9 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('express:server');
-var http = require('http');
+const app = require('../app');
+const debug = require('debug')('express:server');
+const http = require('http');
 const config = require('../config');
 const wlog = require('../libs/winstonlog')(module);
 
@@ -21,7 +21,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.

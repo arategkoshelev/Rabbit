@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
+const indexRouter = require('./main');
+const pageRouter = require('./page');
+const usersRouter = require('./users');
+const userRouter = require('./user');
 
-const variables = { title: 'Express' }
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('../views/index', variables);
-});
-
-module.exports = router;
+module.exports = function(app){
+  app.use('/', indexRouter);
+  app.use('/page', pageRouter);
+  app.use('/user', userRouter);
+  app.use('/users', usersRouter);
+}
