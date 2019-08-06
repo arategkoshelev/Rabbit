@@ -9,16 +9,31 @@
  
 </head>
 <body>
-<header>
-    <%-blocks.header%>
+<header class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-1">
+
+            </div>
+            <div class="col-9">
+                <nav class="header__nav">
+                    <%-partial('../partials/topNavigation')%>
+                </nav>
+            </div>
+            <div class="col-2">
+                <div class="header__nav-auth">
+                    <a href="./login" class="header__nav-sign">
+                        Sign in
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </header>
-<section class="nav">
- 
-    <%-partial('../partials/topNavigation')%>
- 
+<%-blocks.header%>
+<%-body -%>
+<section class="main">
     <h1><%=blocks.title%></h1>
- 
-    <%-body -%>
 </section>
 <footer>
     <%-blocks.footer%>

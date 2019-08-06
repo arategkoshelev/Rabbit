@@ -28,9 +28,9 @@ const dropAndClose = async () =>{
   require('./models/user')
   
   await  Promise.all([
-      saveDbUser('vasy1','secret'),
-      saveDbUser('vasy2','kolsecret'),
-      saveDbUser('pety2','petsecret'),
+      saveDbUser('vasya','vasyas'),
+      saveDbUser('kolya','kolyas'),
+      saveDbUser('petya','petyas'),
     ])
   
   mongoose.disconnect()

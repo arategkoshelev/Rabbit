@@ -10,10 +10,12 @@ const logger = require('morgan');
 const favicon = require('express-favicon');
 const session = require('express-session')
 
+const mongoose = require('./libs/mongoose');
 const config = require('./config');
 const routes = require('./routes');
 const wlog = require('./libs/winstonlog')(module);
 const HttpError = require('./error').HttpError;
+const MongoStore = require('connect-mongo')(session);
 
 // view engine setup
 app.engine('ejs', require('ejs-locals'));
@@ -34,19 +36,36 @@ app.use(session({
   secret: config.get('session:secret'),
   key: config.get('session:key'),
   cookie: config.get('session:cookie'),
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    // host: '127.0.0.1',
+    // port: '27017',
+    // db: 'admin',
+    // url: 'mongodb://localhost:27017/test',
+    // username: "root",
+    // password: "example",
+    // collection: 'session'
+  }),
   resave: true,
   saveUninitialized: true
 }))
 
+app.use((req,res,next)=>{
+  req.session.numberOfVisits = req.session.numberOfVisits +1 || 1;
+  // res.send("Visits: " + req.session.numberOfVisits);
+  next()
+})
+
 app.use(require('./middleware/sendHttpError'));
 
 app.use(sassMiddleware({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  indentedSyntax: true, // true = .sass and false = .scss
+  src: path.join(__dirname, '/public'),
+  dest: path.join(__dirname, '/public'),
+  indentedSyntax: false, // true = .sass and false = .scss
   sourceMap: true
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(express.static(path.join(__dirname, '/public')));
 
 routes(app);
 

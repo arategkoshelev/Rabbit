@@ -2,6 +2,23 @@ const crypto = require('crypto');
 const mongoose = require('../libs/mongoose');
   Schema = mongoose.Schema;
 
+const util = require('util')
+const http = require('http');
+const wlog = require('../libs/winstonlog')(module);
+
+function AuthError(message){
+  Error.apply(this, arguments);
+  Error.captureStackTrace(this, AuthError);
+
+
+  this.message = message || http.STATUS_CODES[status] || "Error";
+}
+
+util.inherits(AuthError, Error);
+AuthError.prototype.name = 'AuthError';
+exports.AuthError = AuthError;
+
+
 const schema = new Schema({
   username:{
     type: String,

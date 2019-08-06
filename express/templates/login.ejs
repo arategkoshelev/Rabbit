@@ -1,0 +1,34 @@
+<% layout('/layout/page') -%> 
+<% block('title', 'Login');  -%> 
+
+<section class="login" id="login">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1 class="login__heading">
+          Login and enter
+        </h1>
+        <p class="login__intro">
+          enter user name and password. whether no user - it will be create
+        </p>
+        <form class="login__form">
+          <label class="login__label">
+            <input type="text" class="login__input" name="username" placeholder="name">
+          </label>
+
+          <label class="login__label">
+            <input type="text" class="login__input" name="password" placeholder="password">
+          </label>
+          <div class="login__submit">
+            <button class="login__submit-btn">
+              Enter
+            </button>
+            <span class="login__submit-helper">
+              
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
