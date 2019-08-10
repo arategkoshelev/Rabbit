@@ -3,4 +3,18 @@
 
 <p class="lead">Chat Page</p>
 
-<p class="chat__user"> <%=userId%></p>
+<p class="chat__user"> <%=user.get('username') -%></p>
+
+<section class="chat" id="chat">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <ul id="chat__messages" class="chat__messages"></ul>
+        <form action="" id="chat__form" class="chat__form">
+          <input id="chat__input" class="chat__input" autocomplete="off" />
+          <button id="chat__submit" class="chat__submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

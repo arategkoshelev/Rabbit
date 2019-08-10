@@ -1,12 +1,15 @@
 const User = require('../models/user').User;
 
-module.exports = (req, res, next) =>{
+module.exports = async (req, res, next) => {
+  res.locals.user = null;
+  req.user = null;
   if (!req.session.user) return next();
-
-  User.findById(req.session.user, (err, user)=>{
-    if (err) return next(err);
-
+  try{
+    const user = await User.findById(req.session.user).exec()
+    res.locals.user = user; //access for all templates
     req.user = user;
-    next();
-  })
+  }catch(err){
+    return next(err);
+  }
+  next();
 }

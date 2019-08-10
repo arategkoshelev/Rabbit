@@ -57,6 +57,7 @@ app.use((req,res,next)=>{
 })
 
 app.use(require('./middleware/sendHttpError'));
+app.use(require('./middleware/loadUser'));
 
 app.use(sassMiddleware({
   src: path.join(__dirname, '/public'),

@@ -13,22 +13,22 @@ router.get('/', function(req, res, next) {
 router.post('/', multer.none(), (req, res, next) => {
   const { username, password } = req.body;
 
-  authorize(username, password, res, next)
+  authorize(username, password, req, res, next)
 
 });
 
 module.exports = router;
 
-
-async function authorize(username, password, res, next){
+async function authorize(username, password, req, res, next){
 
   let user;
 
   try{
-    user =  await User.findOne({username}).exec();
+    user = await User.findOne({username}).exec();
 
     if (user) {
       if (user.checkPassword(password)){
+        req.session.user = user._id;
         res.status(200).send("OK")
         return
       }
@@ -39,6 +39,7 @@ async function authorize(username, password, res, next){
       try{
         const reqUser = new User({username, password});
         user = await reqUser.save();
+        req.session.user = user._id;
         res.status(200).send("OK")
       }catch(err){
         wlog.error(err, "can't save user")
@@ -47,7 +48,7 @@ async function authorize(username, password, res, next){
       }
       
     }
-    req.session.user = user._id;
+
 
   }catch(e){
     return next(e)
