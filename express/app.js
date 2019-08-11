@@ -9,13 +9,13 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const favicon = require('express-favicon');
 const session = require('express-session')
+const sessionStorage = require('./libs/sessionStore')
 
-const mongoose = require('./libs/mongoose');
 const config = require('./config');
 const routes = require('./routes');
 const wlog = require('./libs/winstonlog')(module);
 const HttpError = require('./error').HttpError;
-const MongoStore = require('connect-mongo')(session);
+
 
 // view engine setup
 app.engine('ejs', require('ejs-locals'));
@@ -36,16 +36,7 @@ app.use(session({
   secret: config.get('session:secret'),
   key: config.get('session:key'),
   cookie: config.get('session:cookie'),
-  store: new MongoStore({
-    mongooseConnection: mongoose.connection,
-    // host: '127.0.0.1',
-    // port: '27017',
-    // db: 'admin',
-    // url: 'mongodb://localhost:27017/test',
-    // username: "root",
-    // password: "example",
-    // collection: 'session'
-  }),
+  store: sessionStorage,
   resave: true,
   saveUninitialized: true
 }))

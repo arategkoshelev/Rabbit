@@ -1,12 +1,12 @@
 const http = require('http');
 const url = require('url')
 const debug = require('debug')('server:request')
-const log = require('./app/utils/winstonlog')(module)
+const wlog = require('./app/utils/winstonlog')(module)
 const fs = require('fs');
 
 const server = new http.Server(function(req, res){
 
-  log.info('not important')
+  wlog.info('not important')
 
   const urlParse = url.parse(req.url, true);
 
