@@ -2,7 +2,7 @@
  * Use websockets handler for http socket.io 
  */
 const cookie = require('cookie');
-const connect = require('connect');
+const cookieParser = require('cookie-parser');
 const sessionStore = require('../libs/sessionStore');
 const config = require('../config');
 const HttpError = require('../error').HttpError;
@@ -24,7 +24,7 @@ const loadSession = function(handshake){
   return new Promise((resolve, reject) => {
 
     const sidCookie = handshake.cookies[config.get('session:key')]; 
-    const sid = connect.utils.parseSignedCookie(
+    const sid = cookieParser.signedCookie(
       sidCookie, config.get('session:secret')
     );
     sessionStore.load(sid, function(err, session){
@@ -44,20 +44,24 @@ module.exports = function(server){
 
   const io = require('socket.io')(server);
   
-  io.set('origins', 'localhost:*');
-  io.set('logger', wlog);
-  io.set('authorization', async function(handshake){
+  // io.set('origins', 'localhost:*');
+  // io.set('logger', wlog);
+
+  io.of('/chat').use( async function(socket, next){
 
     try{
-      handshake.cookies = cookie.parse(handshake.headers.cookie || '');
-
-      const session = await loadSession(handshake);
+      const handshake = socket.request;
+      socket.handshake.cookies = cookie.parse(handshake.headers.cookie || '');
+      // console.log(socket.handshake)
+      const session = await loadSession(socket.handshake);
+      //console.log(session, "session")
+      
 
       if (!session){
         throw (new HttpError(401, 'No session'))
       }
 
-      handshake.session = session;
+      socket.handshake.session = session;
 
       if (!session.user){
         wlog.debug('Session %s is anonymous', session.id);
@@ -65,38 +69,45 @@ module.exports = function(server){
       }
 
       const user = await User.findById(session.user).exec();
+      console.log(user, 'user')
+      if (!user){
+        wlog.info('user %s not found', user);
+        throw new HttpError(404, 'user not found')
+      }
 
-      handshake.user = user;
-
-      return true
+      socket.handshake.user = user;
 
     } catch(err){
-        if (err instanceof HttpError){
-          return false
-        }
+      return next(err)
     }
-
+    next()
     
   })
 
   const chat = io.of('/chat');
 
   chat.on('connection', function(socket){
+      console.log('+++++++++++++');
+      console.log(socket.handshake.user.username);
 
-
-      const username = socket.handshake.user.get('username');
-      console.log(socket.handshake, username);
+      const username = socket.handshake.user.username;
       socket.join('myroom');
+      socket.broadcast.emit('join', username)
       //console.log(Object.keys(io.sockets.connected))
-      console.log(io.sockets.adapter.rooms)
+      //console.log(io.sockets.adapter.rooms)
       
       socket.on('chat message', function(msg, cb){
       // socket.broadcast.emit('chat message', msg);
-      socket.emit('chat message', msg);
-      socket.broadcast.to('myroom').emit('chat message', msg);
+      socket.emit('chat message', username, msg);
+      socket.broadcast.to('myroom').emit('chat message', username, msg);
       // chat.emit('chat message', msg);
       cb(JSON.stringify(socket.adapter.rooms));
-      }); 
+      });
+      
+      socket.on('disconnect', ()=>{
+        socket.emit('leave', username)
+        socket.broadcast.emit('leave', username)
+      })
     });
 
   // io.on('connection', function(socket){
@@ -106,6 +117,8 @@ module.exports = function(server){
   //     socket.emit('chat message', msg);
   //   }); 
   // });
+
+  return io;
 
 }
 

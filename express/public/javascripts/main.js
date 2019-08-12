@@ -73,16 +73,16 @@ if (document.getElementById('chat')){
   const messages = document.getElementById('chat__messages');
 
   socket
-  .on('chat message', function(msg){
-    printStatus(msg);
+  .on('chat message', function(user, msg){
+    printStatus(user, msg);
   })
-  .on('connect',()=>{
-    printStatus('connect'),
+  .on('connect',(user)=>{
+    printStatus(user, 'connect'),
     input.removeAttribute('disabled');
     form.addEventListener('submit', sendMessage);
   })
-  .on('disconnect',()=>{
-    printStatus('disconnect');
+  .on('disconnect',(user)=>{
+    printStatus(user, 'disconnect');
     input.setAttribute('disabled', true);
     form.removeEventListener('submit',sendMessage);
     setTimeout(reconnect, 500);
@@ -101,9 +101,12 @@ if (document.getElementById('chat')){
     input.value = '';
   }
 
-  function printStatus(status){
+  function printStatus(user, status){
     const li = document.createElement('li');
-    li.innerText = status;
+    const div = document.createElement('div');
+    li.innerText = user;
+    div.innerText = status;
+    li.appendChild(div)
     messages.appendChild(li);
     window.scrollTo(0, document.body.scrollHeight);
   }
